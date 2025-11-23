@@ -9,14 +9,20 @@ def studentPopulation():
     number = int(input("Pls enter the number of students in the class:\n"))
     return number
 
-#ask the user to input the student informations
+
+
+#input the student informations
 def studentInfo():
-    info = []
-    for i in range(0,studentPopulation(),1):
-        ID = int(input("The student ID:\n"))
+    for i in range(1,studentPopulation()+1,1):
+        print(f"Student {i}:\n")
+        ID = input("The student ID:\n")
         name = input("Student's name:\n")
         DoB = input("Enter the student's DoB:\n")
-        info.append(ID,name,DoB)
+        student_roster.append({"ID": ID,"Name": name,"DoB":DoB})
+    print("Here is what inside the student roster:\n")
+    [print(x) for x in student_roster]
+    print("\n")
+    
     
     
 
@@ -25,19 +31,24 @@ def main():
         print("Student management system!")
         print("1.New class\n")
         print("2.List\n")
+        print("3.Test function sect")
         print("0.Exit\n")
-        choice = int(input("Enter your selection(0-2):\n"))
+        choice = int(input("Enter your selection(0-3):\n"))
         if choice == 1:
             print("test")   
              
         elif choice == 2:
             print("test")
-            
         elif choice == 3:
+            print("test3: Input student info")
+            studentInfo()
+            
+            
+        elif choice == 0:
             print("Exiting...")
             break
 
-        if choice <=0 or type(choice) != 'int':
+        elif choice <0 or type(choice) != 'int':
             print("Please enter the choice available in the selection!\n")
             print("--------------------")
 if __name__=="__main__":
