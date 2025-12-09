@@ -1,3 +1,6 @@
+import math
+import numpy as np
+import curses as cus
 class Entity:
     def __init__(self):
         self._id = 0
@@ -45,7 +48,7 @@ class Mark:
     def setter(self,sid,cid,mark):
         self._student_id = sid
         self._course_id = cid
-        self._mark = float(mark)
+        self._mark = (float(mark))
 
     def list(self):
         print(f"Student ID: {self._student_id} | Course ID: {self._course_id} | Score: {self._mark}")
@@ -55,6 +58,7 @@ class School:
         self.courses = []
         self.students = []
         self.marks = []
+        self.gpa = np.empty(10,dtype=float)
     
     def Input_Student(self):
         n = int(input("How many student:\n"))
@@ -77,23 +81,27 @@ class School:
         return False
     
     def Input_Marks(self):
-        cid = int(input("Enter the course's ID for entering mark:\n"))
-        if not self.exists(cid,self.courses):
-            print(f"The course with the ID of {cid} does not exist!")
-            print('\n')
-            return
-        sid = int(input("Enter the student' ID you want to enter the mark for(Just 1 for simplication purpose!):\n"))
-        if not self.exists(sid,self.students):
-            print(f"The student with the ID of {sid} does not exist!")
-            print('\n')
-            return
-        mark = float(input("Enter the mark(0-20):\n"))
-        if mark < 0 or mark > 20:
-            print("Next time, enter the mark according to the instruction ;)")
-            return
-        m = Mark()
-        m.setter(sid,cid,mark)
-        self.marks.append(m)
+        n1 = int(input("How many courses you want to enter mark:\n"))
+        for i in range(n1):
+            cid = int(input("Enter the course's ID for entering mark:\n"))
+            if not self.exists(cid,self.courses):
+                print(f"The course with the ID of {cid} does not exist!")
+                print('\n')
+                return
+            n2 = int(input("How many students you want to give mark:\n"))
+            for i in range(n2):
+                sid = int(input("Enter the student' ID you want to enter the mark:\n"))
+                if not self.exists(sid,self.students):
+                    print(f"The student with the ID of {sid} does not exist!")
+                    print('\n')
+                    return
+                mark = math.floor(float(input("Enter the mark(0-20):\n")))
+                if mark < 0 or mark > 20:
+                    print("Next time, enter the mark according to the instruction ;)")
+                    return
+                m = Mark()
+                m.setter(sid,cid,mark)
+                self.marks.append(m)
     def List_Marks(self):
         print("--/Marks/--")
         for m in self.marks:
@@ -109,7 +117,24 @@ class School:
         for i in self.courses:
             i.list()
         print('\n')
-        
+
+    def calc_GPA(self):
+        num = int(input("How many student you want to calc GPA for:\n"))
+        for i in range(num):
+            m = input("Enter the marks(Input as follow: m1 m2 m3 ...)\n").split()
+            n = input("Enter the credits(Input as follow: c1 c2 c3 ...):\n").split()
+
+            marr = np.array(m,dtype=float)
+            narr = np.array(n,dtype=int)
+
+            gpa = np.sum(np.multiply(marr,narr))/np.sum(narr)
+            self.gpa[i] = gpa
+            print(gpa)
+            
+    def student_sort_by_gpa(self):
+        np.sort(self.gpa)
+        print(self.gpa)
+    
 school = School()
 school.Input_Student()
 school.Input_Courses()
@@ -117,5 +142,7 @@ school.Input_Marks()
 school.List_Student()
 school.List_Courses()
 school.List_Marks()
+school.calc_GPA()
+#school.student_sort_by_gpa()
 
         
