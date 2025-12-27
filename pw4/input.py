@@ -1,85 +1,34 @@
-import math
 import numpy as np
+import math
+from .Domains.course import Course
+from .Domains.student import Student
+from .Domains.mark import Mark
 
-class Entity:
-    def __init__(self):
-        self._id = 0
-        self._name = ''
-    
-    def input(self):
-        id =input("Enter the ID:\n")
-        name = input("Enter the name:\n")
-        self._id = id
-        self._name = name
-    def list(self):
-        print(f"{self._id} | {self._name}")
-    
-    def get_id(self):
-        return self._id
+def swap(arr, i, j):
+    arr[i], arr[j] = arr[j], arr[i]
 
-class Course(Entity):
-    def input(self):
-        id =int(input("Enter the course's ID:\n"))
-        name = input("Enter the course's name:\n")
-        self._id = id
-        self._name = name
+def partition(arr, low, high):
+    pivot = arr[high]
+    i = low - 1
+    for j in range(low, high):
+        if arr[j] < pivot:
+            i += 1
+            swap(arr, i, j)
+    swap(arr, i + 1, high)
+    return i + 1
 
-class Student(Entity):
-    def __init__(self):
-        super().__init__()
-
-        self.__dob = ''
-    def input(self):
-        id =int(input("Enter the student's ID:\n"))
-        name = input("Enter the student's name:\n")
-        dob = input("Enter the student's DoB:\n")
-        self._id = id
-        self._name = name
-        self.__dob = dob
-    def list(self):
-        print(f'ID: {self._id} | Name: {self._name} | DoB: {self.__dob}')
-
-class Mark:
-    def __init__(self):
-        self._student_id = 0
-        self._course_id = 0
-        self._mark = 0.0 
-
-    def setter(self,sid,cid,mark):
-        self._student_id = sid
-        self._course_id = cid
-        self._mark = (float(mark))
-
-    def list(self):
-        print(f"Student ID: {self._student_id} | Course ID: {self._course_id} | Score: {self._mark}")
+def quickSort(arr, low, high):
+    if low < high:
+        pi = partition(arr, low, high)
+        quickSort(arr, low, pi - 1)
+        quickSort(arr, pi + 1, high)
 
 class School:
     def __init__(self):
         self.courses = []
         self.students = []
         self.marks = []
-        self.gpa = np.empty(10,dtype=float)
-
-    def partition(arr, low, high):
-        pivot = arr[high]
-        i = low - 1
-        for j in range(low, high):
-            if arr[j] < pivot:
-                i += 1
-                swap(arr, i, j)
-        swap(arr, i + 1, high)
-        return i + 1
-
-
-    def swap(arr, i, j):
-        arr[i], arr[j] = arr[j], arr[i]
-
-
-    def quickSort(arr, low, high):
-        if low < high:
-            pi = partition(arr, low, high)
-            quickSort(arr, low, pi - 1)
-            quickSort(arr, pi + 1, high)
+        self.gpa = np.array([])
     
     def Input_Student(self):
         n = int(input("How many student:\n"))
@@ -141,6 +90,7 @@ class School:
 
     def calc_GPA(self):
         num = int(input("How many student you want to calc GPA for:\n"))
+        self.gpa = np.empty(num,dtype=float)
         for i in range(num):
             m = input("Enter the marks(Input as follow: m1 m2 m3 ...)\n").split()
             n = input("Enter the credits(Input as follow: c1 c2 c3 ...):\n").split()
@@ -155,24 +105,17 @@ class School:
     def student_sort_by_gpa(self):
         try: 
             n = len(self.gpa)
-            self.quickSort(self.gpa,0,n-1)
+            if n == 0:
+                print("No GPAs to sort.")
+                return
+            quickSort(self.gpa,0,n-1)
+            print("Sorted GPAs:")
             for i in self.gpa:
-                print(i, end='')
+                print(i, end=' ')
+            print()
         except NameError:
             print('again!')
             return
         except TypeError:
             print('again')
             return
-    
-school = School()
-school.Input_Student()
-school.Input_Courses()
-school.Input_Marks()
-school.List_Student()
-school.List_Courses()
-school.List_Marks()
-school.calc_GPA()
-school.student_sort_by_gpa()
-
-        
